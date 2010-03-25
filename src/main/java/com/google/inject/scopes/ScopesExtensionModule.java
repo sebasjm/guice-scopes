@@ -7,6 +7,6 @@ public class ScopesExtensionModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bindScope(ThreadLocal.class, ThreadLocalScope.THREAD_LOCAL);
+        bindScope(ThreadLocal.class, new ThreadLocalScope());
     }
 }

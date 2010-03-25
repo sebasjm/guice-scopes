@@ -16,7 +16,7 @@ public class TheadLocalScopeTest {
     @Before
     public void creteInjector() {
         injector = Guice.createInjector(
-//                Stage.DEVELOPMENT,
+                Stage.DEVELOPMENT,
                 new ScopesExtensionModule(), 
                 new DummyModule()
             );
