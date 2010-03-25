@@ -1,8 +1,13 @@
 
 package com.google.inject.contexts;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.Provider;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.transaction.Transaction;
 
 /**
  * Este contexto esta basado en el tiempo de vida de la transaccion en curso.
@@ -10,18 +15,18 @@ import java.util.Map;
  * 
  * @author sebasjm at computer dot org
  */
-public class JTAContext implements ContextManager{
+public class JTAContext implements Provider<Map<Key,Object>> {
 
-    public void begin() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+    private static Map<Transaction,Map<Key,Object>> locals = new ConcurrentHashMap<Transaction, Map<Key, Object>>();
+    private Injector injector;
 
-    public void end() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Inject
+    public JTAContext(Injector injector) {
+        this.injector = injector;
     }
 
     public Map<Key, Object> get() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return locals.get(injector.getInstance(Transaction.class));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.google.inject.scopes;
 
-import com.google.inject.modules.ContextExtensionModule;
+import com.google.inject.modules.ScopeModule;
 import com.google.inject.modules.ScopesExtensionModule;
 import static org.junit.Assert.*;
 
@@ -19,7 +19,7 @@ public class TheadLocalScopeTest {
     public void creteInjector() {
         injector = Guice.createInjector(
                 Stage.DEVELOPMENT,
-                new ContextExtensionModule()
+                new ScopeModule()
             );
         injector = Guice.createInjector(
                 Stage.DEVELOPMENT,
@@ -47,13 +47,13 @@ public class TheadLocalScopeTest {
         assertNotSame(retriever.dummy, retrieveIntance());
     }
 
-    private Dummy retrieveIntance() {
-        return injector.getInstance(Dummy.class);
+    private DummyInThreadContext retrieveIntance() {
+        return injector.getInstance(DummyInThreadContext.class);
     }
 
     private class Retriever implements Runnable {
 
-        private Dummy dummy;
+        private DummyInThreadContext dummy;
 
         public void run() {
             dummy = retrieveIntance();

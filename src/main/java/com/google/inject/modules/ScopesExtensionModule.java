@@ -3,7 +3,7 @@ package com.google.inject.modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.scopes.ExtendedScope;
-import com.google.inject.scopes.annotations.ThreadLocal;
+import com.google.inject.scopes.annotations.CustomScope;
 
 public class ScopesExtensionModule extends AbstractModule {
 
@@ -16,7 +16,7 @@ public class ScopesExtensionModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bindScope(ThreadLocal.class, scope);
+        bindScope(CustomScope.class, scope);
     }
 
 

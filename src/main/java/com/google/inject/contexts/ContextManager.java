@@ -1,8 +1,10 @@
 
 package com.google.inject.contexts;
 
+import com.google.inject.ImplementedBy;
 import com.google.inject.Key;
 import com.google.inject.Provider;
+import com.google.inject.scopes.annotations.CustomScope;
 import java.util.Map;
 
 /**
@@ -12,6 +14,9 @@ import java.util.Map;
  *
  * @author sebasjm at computer dot org
  */
-public interface ContextManager extends Provider<Map<Key,Object>> {
+@ImplementedBy(ContextManagerProvider.class)
+public interface ContextManager {
+
+    public Provider<Map<Key, Object>> get(CustomScope annotation);
 
 }

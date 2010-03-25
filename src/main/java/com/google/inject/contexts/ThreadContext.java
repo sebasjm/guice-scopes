@@ -1,6 +1,7 @@
 package com.google.inject.contexts;
 
 import com.google.inject.Key;
+import com.google.inject.Provider;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -10,7 +11,7 @@ import java.util.WeakHashMap;
  * 
  * @author sebasjm at computer dot org
  */
-public class ThreadContext implements ContextManager {
+public class ThreadContext implements Provider<Map<Key,Object>> {
 
     private static ThreadLocal<Map<Key, Object>> locals = new ThreadLocal<Map<Key, Object>>() {
 
@@ -28,11 +29,4 @@ public class ThreadContext implements ContextManager {
         return locals.get();
     }
 
-    public void begin() {
-        // do nothing
-    }
-
-    public void end() {
-        // do nothing
-    }
 }
