@@ -1,5 +1,7 @@
 package com.google.inject.scopes;
 
+import com.google.inject.modules.ContextExtensionModule;
+import com.google.inject.modules.ScopesExtensionModule;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -17,7 +19,11 @@ public class TheadLocalScopeTest {
     public void creteInjector() {
         injector = Guice.createInjector(
                 Stage.DEVELOPMENT,
-                new ScopesExtensionModule(), 
+                new ContextExtensionModule()
+            );
+        injector = Guice.createInjector(
+                Stage.DEVELOPMENT,
+                injector.getInstance(ScopesExtensionModule.class),
                 new DummyModule()
             );
     }
