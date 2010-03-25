@@ -4,51 +4,36 @@ package com.google.inject.scopes;
 import com.google.inject.Key;
 import com.google.inject.Provider;
 import com.google.inject.Scope;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ThreadLocalScope implements Scope {
 
-    private ConcurrentMap<String, Object> context = new ConcurrentHashMap<String, Object>();
+    private ThreadLocal<Map<Key<?>, Object>> thread_context = new ThreadLocal<Map<Key<?>, Object>>() {
 
-    private ThreadLocalScope() {
-        super();
-    }
+        @Override
+        protected synchronized Map<Key<?>, Object> initialValue() {
+            return new HashMap<Key<?>, Object>();
+        }
+
+    };
+
     /**
      * Thread Local scope.
      */
     public static final Scope THREAD_LOCAL = new ThreadLocalScope();
 
-    /** A sentinel attribute value representing null. */
-    private enum NullObject {
-
-        INSTANCE
-    }
-
-    @Override
-    public <T> Provider<T> scope(Key<T> key, final Provider<T> creator) {
-        final String name = key.toString();
+    public <T> Provider<T> scope(final Key<T> key, final Provider<T> creator) {
         return new Provider<T>() {
 
             @SuppressWarnings("unchecked")
-            @Override
             public T get() {
-                Object obj = context.get(name);
-                if (NullObject.INSTANCE == obj) {
-                    return null;
+                Map<Key<?>, Object> context = thread_context.get();
+
+                if ( !context.containsKey(key) ) {
+                    context.put(key, creator.get());
                 }
-                ThreadLocal threadLocal = (ThreadLocal) obj;
-                if (threadLocal == null) {
-                    threadLocal = new ThreadLocal();
-                }
-                T t = (T) threadLocal.get();
-                if (t == null) {
-                    t = creator.get();
-                    threadLocal.set(t);
-                    context.put(name, (t != null) ? threadLocal
-                            : NullObject.INSTANCE);
-                }
-                return t;
+                return (T) context.get(key);
             }
         };
     }
